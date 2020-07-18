@@ -54,18 +54,6 @@ submit.grid(columnspan = 2, row = 4)
 master.update()
 master.mainloop()
 
-def swap(arr: List[int], p0: int, p1: int) -> None:
-    arr[p0], arr[p1] = arr[p1], arr[p0]
-
-def isSorted(arr: List[int]) -> bool:
-    isSorted = True
-    for i in range(1, len(arr)):
-        if arr[i] < arr[i - 1]:
-            isSorted = False
-            print("Array is not sorted, check implementation for issues.\nIndex:", i - 1, "\t", arr[i - 1], ">", arr[i])
-
-    return True if isSorted else False
-
 class Sort():
     def __init__(self, arr: List[int]):
         self.arr = arr
@@ -104,8 +92,17 @@ class Sort():
             self.__heapify(n, i)
 
         for i in range(n - 1, 0, -1):
-            swap(self.arr, i, 0)
+            self.__swap(i, 0)
             self.__heapify(i, 0)
+
+    def isSorted(self) -> bool:
+        isSorted = True
+        for i in range(1, len(self.arr)):
+            if self.arr[i] < self.arr[i - 1]:
+                isSorted = False
+                print("Array is not sorted, check implementation for issues.\nIndex:", i - 1, "\t", self.arr[i - 1], ">", self.arr[i])
+
+        return True if isSorted else False
 
     def __mergeSort(self, left: int, mid: int, right: int) -> None:
         i, j = left, mid + 1
@@ -154,15 +151,15 @@ class Sort():
         mid = (start + end) // 2
         if self.arr[start] > self.arr[mid]:
             self.__draw(start, mid)
-            swap(self.arr, start, mid)
+            self.__swap(start, mid)
         if self.arr[start] > self.arr[end]:
             self.__draw(start, end)
-            swap(self.arr, start, end)
+            self.__swap(start, end)
         if self.arr[mid] > self.arr[end]:
             self.__draw(mid, end)
-            swap(self.arr, mid, end)
+            self.__swap(mid, end)
 
-        swap(self.arr, mid, end - 1)
+        self.__swap(mid, end - 1)
         pivot = self.arr[end - 1]
         self.__draw(start, end)
         i, j = start + 1, end - 2
@@ -174,13 +171,13 @@ class Sort():
                 j -= 1
             
             if i < j:
-                swap(self.arr, i, j)
+                self.__swap(i, j)
             else:
                 break
                 
             self.__draw(i, j)
 
-        swap(self.arr, i, end - 1)
+        self.__swap(i, end - 1)
         self.__draw(i, end)
 
         self.__quickSort(start, i)
@@ -203,7 +200,7 @@ class Sort():
                 largerIdx = rightIdx
 
             if self.arr[largerIdx] > self.arr[rootIdx]:
-                swap(self.arr, rootIdx, largerIdx)
+                self.__swap(rootIdx, largerIdx)
                 rootIdx = largerIdx
             else:
                 break
@@ -225,6 +222,9 @@ class Sort():
             if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE):
                 exit()
 
+    def __swap(self, p0: int, p1: int) -> None:
+        self.arr[p0], self.arr[p1] = self.arr[p1], self.arr[p0]
+
 def main() -> None:
     arr = [None] * arrCnt
     for i in range(arrCnt):
@@ -237,7 +237,7 @@ def main() -> None:
     while True:
         if not finished:
             getattr(srt, algo)()
-            print(isSorted(arr), "\n", arr)
+            print(srt.isSorted(), "\n", arr)
             finished = True
 
         for e in pygame.event.get():
