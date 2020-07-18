@@ -8,3 +8,4 @@ A Python application that visualizes the following sorting algorithms:
 ## Requirements
 * Python3
 * Pygame
+* Tkinter
