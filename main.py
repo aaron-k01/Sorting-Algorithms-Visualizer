@@ -1,23 +1,19 @@
 import pygame
 import random
 from tkinter import *
-from Settings import *
+from settings import *
 from sys import exit
-from typing import List, Tuple
 
 pygame.init()
 scr = pygame.display.set_mode((scrWidth, scrHeight))
 
 master = Tk()
 
-def onSubmit() -> None:
-    global arrCnt
-    global sortSpeed
-    global dist
+def onSubmit():
+    global arrCnt, dist
 
     try:
         arrCnt = int(arrSzEntry.get())
-        sortSpeed = int(speedEntry.get())
         dist = scrWidth // arrCnt - gap
     except:
         pass
@@ -25,18 +21,13 @@ def onSubmit() -> None:
     master.quit()
     master.destroy()
 
-def setAlgorithm(key: str) -> None:
+def setAlgorithm(key):
     global algo
     algo = sortAlgos[key]
 
-arrSzText = Label(master, text = "Array Size")
-arrSzText.grid(row = 0, column = 0, sticky = W)
+Label(master, text = "Array Size").grid(row = 0, column = 0, sticky = W)
 arrSzEntry = Entry(master)
 arrSzEntry.grid(row = 0, column = 1, sticky = E)
-speedText = Label(master, text = "Sort Speed")
-speedText.grid(row = 1, column = 0, sticky = W)
-speedEntry = Entry(master)
-speedEntry.grid(row = 1, column = 1, sticky = E)
 
 sortAlgos = {
     "Bubble Sort": "bubbleSort",
@@ -55,10 +46,10 @@ master.update()
 master.mainloop()
 
 class Sort():
-    def __init__(self, arr: List[int]):
+    def __init__(self, arr):
         self.arr = arr
 
-    def bubbleSort(self) -> None:
+    def bubbleSort(self):
         sz = len(self.arr)
         for i in range(sz):
             for j in range(0, sz - 1 - i):
@@ -67,7 +58,7 @@ class Sort():
                 if self.arr[j] > self.arr[j + 1]:
                     self.arr[j], self.arr[j + 1] = self.arr[j + 1], self.arr[j]
 
-    def mergeSort(self, left: int = None, right: int = None) -> None:
+    def mergeSort(self, left = None, right = None):
         if left == None or right == None:
             left, right = 0, len(self.arr) - 1
 
@@ -81,10 +72,10 @@ class Sort():
 
         self.__mergeSort(left, mid, right)
 
-    def quickSort(self) -> None:
+    def quickSort(self):
         self.__quickSort(0, len(self.arr) - 1)
 
-    def heapSort(self) -> None:
+    def heapSort(self):
         n = len(self.arr)
 
         # build our heap. start from n // 2 - 1 because that's the first index of a non-leaf node in a complete tree.
@@ -95,7 +86,7 @@ class Sort():
             self.__swap(i, 0)
             self.__heapify(i, 0)
 
-    def isSorted(self) -> bool:
+    def isSorted(self):
         isSorted = True
         for i in range(1, len(self.arr)):
             if self.arr[i] < self.arr[i - 1]:
@@ -104,7 +95,7 @@ class Sort():
 
         return True if isSorted else False
 
-    def __mergeSort(self, left: int, mid: int, right: int) -> None:
+    def __mergeSort(self, left, mid, right):
         i, j = left, mid + 1
         temp = []
         while i <= mid and j <= right:
@@ -132,7 +123,7 @@ class Sort():
             y += 1
             self.__draw()
 
-    def __quickSort(self, start: int, end: int) -> None:
+    def __quickSort(self, start, end):
         # do insertion sort if the array window size is within the cutoff range.
         if start + 10 > end:
             for i in range(start + 1, end + 1):
@@ -185,7 +176,7 @@ class Sort():
 
         self.__draw()
     
-    def __heapify(self, heapSz: int, rootIdx: int) -> None:
+    def __heapify(self, heapSz, rootIdx):
         while rootIdx < heapSz:
             self.__draw(heapSz, rootIdx)
 
@@ -208,7 +199,7 @@ class Sort():
         self.__draw()
         
     # TODO: redo to take multiple indices to allow for more than just two colors.
-    def __draw(self, idx1: int = -1, idx2: int = -1) -> None:
+    def __draw(self, idx1 = -1, idx2 = -1):
         scr.fill(BLACK)
 
         for i, a in enumerate(self.arr):
@@ -222,10 +213,10 @@ class Sort():
             if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE):
                 exit()
 
-    def __swap(self, p0: int, p1: int) -> None:
+    def __swap(self, p0, p1):
         self.arr[p0], self.arr[p1] = self.arr[p1], self.arr[p0]
 
-def main() -> None:
+def main():
     arr = [None] * arrCnt
     for i in range(arrCnt):
         curSize = random.randint(1, scrHeight)
@@ -237,11 +228,11 @@ def main() -> None:
     while True:
         if not finished:
             getattr(srt, algo)()
-            print(srt.isSorted(), "\n", arr)
             finished = True
 
         for e in pygame.event.get():
             if e.type == pygame.QUIT or (e.type == pygame.KEYDOWN and e.key == pygame.K_ESCAPE):
                 exit()
 
-main()
+if __name__ == '__main__':
+    main()
